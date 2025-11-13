@@ -1,29 +1,178 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App</title>
-    <script src="file:///C:/Users/vlasd/OneDrive%20-%20HTL%20Anichstrasse/Dokumente/telegram_miniapp/index.html"></script>
+    <title>Meine Notiz-App</title>
+    <!-- Lädt Tailwind CSS zum Stylen -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Diese Zeile sorgt für die "App-Farbe" im Browser-Tab (Handy) -->
+    <meta name="theme-color" content="#3b82f6">
+    
+    <!-- 
+      Dies ist das "App-Manifest". Es ist in einer einzigen Zeile kodiert (Base64),
+      damit wir keine separate manifest.json-Datei brauchen.
+      Es teilt dem Browser mit:
+      - Name: "Einfache Notiz-App"
+      - Start-URL: "." (die aktuelle Seite)
+      - Anzeige: "standalone" (ohne Browser-Adressleiste)
+      - Icons: (Zwei einfache blaue Kreise, ebenfalls als Daten-URL kodiert)
+    -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRWluZmFjaGUgTm90ei1BcHAiLCJzaG9ydF9uYW1lIjoiTm90aXplbiIsImRlc2NyaXB0aW9uIjoiRWluZSBlaW5mYWNoZSBOb3RpemJsb2NrLUFwcC4iLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsInRoZW1lX2NvbG9yIjoiIzNiODJmNiIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBISjJaeUIwZEhSd09pOHZkM2QzTG5jekxuVnVaM1ZqWjJWMGRHbHZiakV5TURCMEJqcHRaV2gwWlhNaVB3cHlaWE56WlhNaVB6NDhZWEJ3YjJSMWN5MXZkbWxqWlc1MGN5SXdNQ0l4TURBaUFnZz0iLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9LHsic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSEoyWnlCMGRISndPaTh2ZDNkM0xuY3pMblZ1VjNWaloyVjBkR2x2YmpFeU1EQjBCanB0WldoMFpYTWlQd3B5WlhOelpYTWlQejQ4WVhCd2IyUjFjeTF2ZG1salpXNTBjeUl3TUNJeE1EQWlBZz09Iiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; }
-        button { margin: 10px; padding: 10px 20px; font-size: 18px; cursor: pointer; }
+        /* Ein kleiner Style, um den Textarea-Rand an die Theme-Farbe anzupassen */
+        textarea:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px #3b82f660;
+            outline: none;
+        }
     </style>
 </head>
-<body>
-    <h1>Привет, Telegram!</h1>
-    <button onclick="changeText('Кнопка 1 нажата')">Кнопка 1</button>
-    <button onclick="changeText('Кнопка 2 нажата')">Кнопка 2</button>
-    <p id="output">Нажмите кнопку</p>
+<body class="bg-gray-100 font-sans" style="font-family: 'Inter', sans-serif;">
+
+    <div class="container mx-auto max-w-lg p-4 min-h-screen flex flex-col">
+        
+        <!-- Header -->
+        <header class="bg-blue-500 text-white p-4 rounded-lg shadow-md mb-4">
+            <h1 class="text-2xl font-bold">Meine Notiz-App</h1>
+            <p class="text-sm opacity-90">Deine Notizen, offline verfügbar.</p>
+        </header>
+
+        <!-- Notiz-Bereich -->
+        <main class="flex-grow flex flex-col">
+            <label for="notepad" class="text-sm font-medium text-gray-700 mb-1">Dein Notizblock:</label>
+            <textarea id="notepad" 
+                      class="w-full h-64 p-3 border-2 border-gray-300 rounded-lg shadow-sm resize-none transition-all duration-200"
+                      placeholder="Schreib hier etwas..."></textarea>
+            
+            <!-- Status-Nachricht für Speichern -->
+            <div id="status" class="text-center text-green-600 h-6 mt-2 text-sm font-medium transition-opacity duration-500 opacity-0">
+                Gespeichert!
+            </div>
+        </main>
+
+        <!-- Installations-Hinweis im Footer -->
+        <footer class="text-center p-4 mt-4 bg-gray-200 rounded-lg">
+            <p class="text-sm text-gray-700">
+                <strong>Tipp:</strong> Um diese App zu "installieren", tippe auf das 
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 inline-block mx-1 align-text-bottom">
+                    <path d="M13 4.5a2.5 2.5 0 11.702 4.237L6.343 13.102a2.5 2.5 0 11-.84-1.702l5.252-3.001a2.5 2.5 0 012.245-3.9Z" />
+                    <path d="M13 15.5a2.5 2.5 0 11-1.038-2.001l-5.25-3.002a2.5 2.5 0 11.84-1.702l5.25 3.001A2.5 2.5 0 0113 15.5Z" />
+                </svg>
+                'Teilen'-Symbol (iOS) oder
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 inline-block mx-1 align-text-bottom">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                </svg>
+                Menü (Android) und wähle <strong>'Zum Startbildschirm hinzufügen'</strong>.
+            </p>
+        </footer>
+    </div>
 
     <script>
-        function changeText(text) {
-            document.getElementById("output").innerText = text;
+        // --- App-Logik (Notizblock) ---
+
+        const notepad = document.getElementById('notepad');
+        const status = document.getElementById('status');
+
+        // Beim Laden der Seite: Gespeicherte Notiz laden
+        window.addEventListener('load', () => {
+            const savedNote = localStorage.getItem('myPwaNote');
+            if (savedNote) {
+                notepad.value = savedNote;
+            }
+        });
+
+        // Beim Tippen: Notiz automatisch speichern
+        notepad.addEventListener('input', () => {
+            localStorage.setItem('myPwaNote', notepad.value);
+            
+            // Speicher-Feedback anzeigen
+            status.classList.remove('opacity-0');
+            // Timeout zurücksetzen, falls er schon läuft
+            if (window.saveTimeout) {
+                clearTimeout(window.saveTimeout);
+            }
+            // Feedback nach 2 Sekunden ausblenden
+            window.saveTimeout = setTimeout(() => {
+                status.classList.add('opacity-0');
+            }, 2000);
+        });
+
+        // --- Service Worker Registrierung (für Offline-Fähigkeit) ---
+
+        // Der gesamte Service Worker Code ist hier in einem String definiert.
+        const swCode = `
+            const CACHE_NAME = 'my-pwa-cache-v1';
+            const URLS_TO_CACHE = [
+                '.', // '.' steht für die index.html-Datei selbst
+            ];
+
+            // Installation: Cache öffnen und die App-Seite hinzufügen
+            self.addEventListener('install', event => {
+                event.waitUntil(
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            console.log('Cache geöffnet');
+                            return cache.addAll(URLS_TO_CACHE);
+                        })
+                );
+            });
+
+            // Fetch: Anfragen abfangen
+            self.addEventListener('fetch', event => {
+                event.respondWith(
+                    // 1. Versuche, die Ressource aus dem Cache zu holen
+                    caches.match(event.request)
+                        .then(response => {
+                            // Wenn im Cache gefunden, zurückgeben
+                            if (response) {
+                                return response;
+                            }
+                            // Sonst: normal über das Netzwerk holen
+                            return fetch(event.request);
+                        })
+                );
+            });
+
+            // Activate: Alte Caches aufräumen (nicht unbedingt nötig für dieses Bsp.)
+            self.addEventListener('activate', event => {
+                const cacheWhitelist = [CACHE_NAME];
+                event.waitUntil(
+                    caches.keys().then(cacheNames => {
+                        return Promise.all(
+                            cacheNames.map(cacheName => {
+                                if (cacheWhitelist.indexOf(cacheName) === -1) {
+                                    return caches.delete(cacheName);
+                                }
+                            })
+                        );
+                    })
+                );
+            });
+        `;
+
+        // Dieser Teil registriert den obigen Code-String als Service Worker.
+        // Er erstellt eine 'virtuelle' JS-Datei im Browser.
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Erstelle eine Blob-Datei aus dem Code-String
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                // Erstelle eine URL für die Blob-Datei
+                const swUrl = URL.createObjectURL(swBlob);
+
+                // Registriere den Service Worker von dieser URL
+                navigator.serviceWorker.register(swUrl)
+                    .then(registration => {
+                        console.log('Service Worker erfolgreich registriert:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker Registrierung fehlgeschlagen:', error);
+                    });
+            });
         }
-        
-        // Авто-настройка Telegram WebApp
-        let tg = window.Telegram.WebApp;
-        tg.expand();
     </script>
+
 </body>
 </html>
